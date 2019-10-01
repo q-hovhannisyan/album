@@ -137,7 +137,8 @@ export default {
 .bg_img{
     background-image: url(/src/assets/img/bg_login.jpg);
     background-size: 100%;
-    background-position: top center;
+    background-position: bottom;
+    
 }
 .labs{
     display: flex;
