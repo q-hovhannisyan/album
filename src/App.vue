@@ -13,12 +13,13 @@ export default {
   data () {
     return {
       // portfolioPosts,
+      loader_status: true,
      }
   },
- components : {
-   Navigation,
-   Foot
- },
+  components : {
+    Navigation,
+    Foot
+  },
 }
 </script>
 <style>

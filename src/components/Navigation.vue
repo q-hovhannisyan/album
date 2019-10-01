@@ -247,10 +247,7 @@ export default {
 .search_input::placeholder{
     color: rgb(134, 134, 134);
 }
-.active2{
-    background-color: #f1f1f1 !important;
-    border-bottom: 1px solid #d4d4d4;
-}
+
 .bg_color_menu{
     background-color: transparent;
     position: fixed;
@@ -258,6 +255,11 @@ export default {
     width: 100%;
     transition: .4s;
     z-index: 9999;
+    border-bottom: 1px solid transparent;
+}
+.active2{
+    background-color: #fff !important;
+    border-bottom: 1px solid #d4d4d4;
 }
 .btn_menu_search{
     background-color: transparent;
