@@ -10,14 +10,14 @@
                             <div class="form-group row labs">
                                 <label for="Input Name" class="col-form-label col-form-label-lg mr-4 ">Username </label>
                                 <div class="inp">
-                                <input type="text" class="logInput" :class="{ danger_inp: danger_em }"  placeholder="Input email address" v-model="email">
+                                <input type="text" class="logInput" :class="{ danger_inp: danger_em }"  placeholder="Input email address" v-model="email" @keyup.enter="pres">
                                 <p class="danger-text" v-show="danger_em">{{danger_e}}</p>
                                 </div>
                             </div>
                             <div class="form-group row labs">
                                 <label for="Input Password" class="col-form-label col-form-label-lg mr-4 ">Password </label>
                                 <div class="inp">
-                                <input type="password" class="logInput" :class="{ danger_inp: danger_pas }"  placeholder="Input Password" v-model="password">
+                                <input type="password" class="logInput" :class="{ danger_inp: danger_pas }"  placeholder="Input Password" v-model="password" @keyup.enter="pres">
                                 <p class="danger-text" v-show="danger_pas">{{danger_password}}</p>
                                 <p class="danger-text" >{{userError}}</p>
                                 </div>
@@ -98,6 +98,9 @@ export default {
             var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return re.test(String(this.email).toLowerCase());
         },
+        pres(event) {
+            this.loginTo()
+        }
     }
 }
 </script>

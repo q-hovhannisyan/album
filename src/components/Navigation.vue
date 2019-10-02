@@ -81,8 +81,8 @@
                     </ul>
                     <ul class="navbar-nav  mt-2 mt-lg-0">
                     <router-link to="/user"><li class="nav-item active mr-4">
-                        <a class="nav-link pt-0 pb-0" href="#">{{name}}
-                            <img src="/src/assets/img/user.png" alt="" class="userIcon ml-2" v-if="token ? logoutUser: ''"> <span class="sr-only">(current)</span></a>
+                        <a class="nav-link pt-0 pb-0" id="ico" href="#">{{name}}
+                            <img src="/src/assets/icons/user.svg" alt="" class="userIcon ml-2" v-if="token ? logoutUser: ''"> <span class="sr-only">(current)</span></a>
                         <i class="fas fa-user"></i>
                     </li></router-link>
                     </ul>
@@ -247,7 +247,10 @@ export default {
 .search_input::placeholder{
     color: rgb(134, 134, 134);
 }
-
+.active2{
+    background-color: #f1f1f1 !important;
+    border-bottom: 1px solid #d4d4d4;
+}
 .bg_color_menu{
     background-color: transparent;
     position: fixed;
@@ -255,11 +258,6 @@ export default {
     width: 100%;
     transition: .4s;
     z-index: 9999;
-    border-bottom: 1px solid transparent;
-}
-.active2{
-    background-color: #fff !important;
-    border-bottom: 1px solid #d4d4d4;
 }
 .btn_menu_search{
     background-color: transparent;
@@ -302,7 +300,7 @@ export default {
     width: 100% !important;
 }
 nav a{
-    /* color: #1a1a1a !important; */
+     color: #1a1a1a !important;
 }
 .container-fluid{
     padding-right: 0;
@@ -312,13 +310,17 @@ nav a{
     top: 0;
 }
   #dropdown-1 a{
-    color: #1a1a1a;
+    color: #0aa095;
   }
     .fas{
-        color: white !important;
+        color: #0aa095 !important;
     }
     .userIcon{
-        width: 35px;
+        width: 32px;
+    }
+    #ico{
+        color: #0aa095 !important;
+        font-weight: 800 !important;
     }
 </style>
 
