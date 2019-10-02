@@ -30,12 +30,13 @@ export default {
         background-color: #f2f2f2;
     }
     .menu-examples{
-        position: sticky;
-        width: 250px;
-        top: 77px;
+        /* position: fixed; */
+        /* top: 0; */
         border: 1px solid #d4d4d4;
+        /* margin-top: 77px; */
+        /* border-radius: 5px; */
         overflow: hidden;
-        height: 90vh;
+        height: 100%;
     }
     .menu{
         display: flex;

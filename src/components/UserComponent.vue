@@ -3,22 +3,32 @@
         <div class="all">
             <H1>Photo Gallery</H1>
             <div class="upload-btn-wrapper">
-                <input type="file" id="files" ref="files" multiple @change="handleFileUploads()">
-                <button class="btn btn-danger" @click="onUpload()">Upload Images</button>
+                <div @click="onUpload()" class="upButton"></div>
+                <label for="files" class="chooseLable"> Choose Files </label>
+
+                <input type="file" id="files" ref="files" multiple @change="handleFileUploads()" style="display: none">
+
             </div>
             <div :class="[ counter == 10 ? 'green' : 'counter']">
                 {{counter}}
             </div>
         </div>
         <div class="all-content container">
-            <div class="card-deck row " >
+            <div class="card-deck row  " >
 <!--           images and id           -->
-                <div class="col-lg-4 col-sm-6 photo-item  " v-for="(item, index) in arr" :key="index">
-                    <div class="card item-content">
-                        <img  :src="`http://127.0.0.1:8000/getImages?token=${token}&imageId=${item}`" class="card-img-top" :alt="item.title" @click="toggle">
+                <draggable @start="drag=true" @end="drag=false" >
+                    <transition-group>
+                <div class="col-lg-4 col-sm-6  oneItem position-relative" v-for="(item1, index) in arr" :key="index"  >
+                    <div class="card item-content ">
+                        <div class="images_wrapper">
+                            <img  :src="`http://127.0.0.1:8000/getImages?token=${token}&imageId=${item1}`" class="card-img-top" :alt="item1.title" @click="toggle">
+                        </div>
+                        <div class="delete" @click="del(item1)">
+                            <img src="/src/assets/icons/cancel.png" width="120" alt="">
+                        </div>
                         <div class="card-body d-flex justify-content-between">
-                            <input class=" position-static ml-1 check" type="checkbox"  :value="item" v-model="images"  aria-label="...">
-                            <b-textarea rows="2" placeholder="Text here..."  v-model="arr[index].value" class=" textar" :value="item"></b-textarea>
+                            <input class=" position-static ml-1 check" type="checkbox"  :value="item1" v-model="images"  aria-label="...">
+                            <b-textarea rows="2" placeholder="Text here..."  v-model="arr[index].value" class=" textar" :value="item1"></b-textarea>
                             <!-- <input type="text" v-model="newText" class="hide" @keyup.enter="keyPressed(index, item, $event)" autocomplete="off"> -->
                             <!-- <h6 class="card-title show" @click="myFunction">{{item.title}}</h6> -->
                             <div class="downbtn">
@@ -27,7 +37,19 @@
                             </div>
                         </div>
                     </div>
+<!--                    <div class="card-body d-flex justify-content-between">-->
+<!--                        <input class=" position-static ml-1 check" type="checkbox"  :value="item1" v-model="images"  aria-label="...">-->
+<!--                        <b-textarea rows="2" placeholder="Text here..."  v-model="arr[index].value" class=" textar" :value="item1"></b-textarea>-->
+<!--                        &lt;!&ndash; <input type="text" v-model="newText" class="hide" @keyup.enter="keyPressed(index, item, $event)" autocomplete="off"> &ndash;&gt;-->
+<!--                        &lt;!&ndash; <h6 class="card-title show" @click="myFunction">{{item.title}}</h6> &ndash;&gt;-->
+<!--                        <div class="downbtn">-->
+<!--                            <button class="btn btn-success btnPic" @click="addText(arr[index])">Save</button>-->
+<!--                            <button class="btn btn-danger btnPic" @click="arr[index].value='' , arr[index].title=''">Cancel</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
+                    </transition-group>
+                </draggable>
             </div>
             <!-- // -->
             <b-button block variant="dark" class="generate" @click="gen"><h1>GENERATE</h1></b-button>
@@ -49,7 +71,11 @@
 </template>
 <script>
 import axios from 'axios'
+import draggable from 'vuedraggable'
 export default {
+    components: {
+        draggable,
+    },
     data(){
         return{
             arr: [
@@ -96,7 +122,7 @@ export default {
     },
         // keyPressed(index, item, event){
         //     if(event.keyCode === 13 ) {
-        //         item.title=this.newText;sudo npm
+        //         item.title=this.newText;
         //         // item.title.appendChild(this.newText);
         //         this.myFunction(event);
         //     }
@@ -143,6 +169,22 @@ export default {
                     console.log(error);
                 })
         },
+        del(e){
+          console.log(e)
+            axios.post(`${host}user/image/delete?token=+${this.token}+&id=+ ${e} `, this.token, e,
+                {
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    }
+                }
+            )
+                .then((response)=>{
+                    this.arr= response.data.imgId;
+                })
+                .catch((error)=>{
+                    console.log(error);
+                })
+        },
         handleFileUploads(){
             this.files = this.$refs.files.files;
         },
@@ -160,6 +202,7 @@ export default {
         }
     },
     created () {
+
         axios.get(`${host}getImgId?token=`+this.token, this.token,
             {
                 headers: {
@@ -177,52 +220,116 @@ export default {
 }
 </script>
 <style scoped>
+    .delete{
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.5s;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+    }
+    .delete>img{
+        width: 100%;
+    }
+    .oneItem:hover .delete{
+        opacity: 1;
+        visibility: visible;
+    }
+    .images_wrapper{
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .images_wrapper>img{
+        height: 100%;
+        width: auto;
+    }
+    .chooseLable{
+        background-color: #0ad3c8;
+        width: 110px;
+        border-radius: 10px;
+        border: 5px groove lightseagreen;
+        margin-bottom: 0;
+        cursor: pointer;
+    }
+    .upButton{
+        width: 50px;
+        height: 50px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-image: url("/src/assets/icons/cloud-computing.svg");
+        position: absolute;
+        right: 5px;
+        top: 0;
+        cursor: pointer;
+    }
 @media screen and (max-width: 1070px){
     .cardGrid{
         align-items: center;
         margin: 0 auto;
     }
 }
+.oneItem{
+    width: auto !important;
+    margin: 10px 0 !important;
+}
 .cont{
     width: 100%;
     margin-top: 5rem;
     position: relative;
 }
+.card-deck span{
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+.card item-content{
+    margin: 20px 0 !important;
+}
 .counter{
-    width: 60px;
-    height: 60px;
+    width: 30px;
+    height: 30px;
     border: 1px solid grey;
     border-radius: 50%;
-    background-color: red;
+    background-color: #f0687e;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.8rem;
+    font-size: 1.2rem;
     position: fixed;
     right: 20px;
     top: 60px;
 }
 .green{
     background-color: green;
-    width: 60px;
-    height: 60px;
+    width: 30px;
+    height: 30px;
     border: 1px solid grey;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.8rem;
+    font-size: 1.2rem;
     position: fixed;
     right: 20px;
     top: 60px;
 }
 .upload-btn-wrapper {
-    overflow: hidden;
+    /*overflow: hidden;*/
+    display: flex;
+    align-items: center;
+    width: 190px;
+    position: relative;
 }
-.upload-btn-wrapper input[type=file] {
-    left: 0;
-    bottom: 0;
-}
+/*.upload-btn-wrapper input[type=file] {*/
+/*    left: 0;*/
+/*    bottom: 0;*/
+/*}*/
 .card-body{
     padding: 0.5rem;
     text-align: center;
@@ -237,14 +344,14 @@ export default {
     margin-bottom: 1rem;
 }
 .all h1{
-    color: #28A745;
+    color: #0aa095;
 }
 .all-content{
     width: 90%;
     /*height: 24rem;*/
     margin: 0 auto;
-    border: 2px solid lightgray;
-    background-image: url("/src/assets/img/images/images.jpg");
+    border: 1px solid lightgray;
+    /*background-image: url("/src/assets/img/images/images.jpg");*/
     margin-bottom: 2rem;
 }
 .photo-item{
@@ -282,16 +389,17 @@ export default {
     padding-bottom: 10px;
 }
 .card{
-    bottom: 7px;
-    border: 0.2px solid gainsboro;
+    /*bottom: 7px;*/
+    /*border: 0.2px solid gainsboro;*/
+    margin: 10px 0;
 }
 .card-deck{
     width: 98%;
     margin: 0 auto;
 }
 .card img{
-    width: 100%;
-    height: 25vh;
+    /*width: 100%;*/
+    /*height: 30vh;*/
 }
 .row{
     justify-content: center;
@@ -358,5 +466,4 @@ input[type=checkbox]:checked:after {
 .generated h6{
     margin: 0 auto;
 }
-
 </style>

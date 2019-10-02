@@ -11,28 +11,28 @@
                             <div class="form-group row labs">
                                 <label for="Input Name" class=" col-form-label col-form-label-lg">Name</label>
                                 <div class="inputDiv">
-                                    <input type="text" class="logInput" :class="{ danger_inp: danger_n }"  placeholder="Input Name" v-model="name">
+                                    <input type="text" class="logInput" :class="{ danger_inp: danger_n }"  placeholder="Input Name" v-model="name" @keyup.enter="pres">
                                     <p class="danger-text" v-show="danger_n">{{danger_name}}</p>
                                 </div>
                             </div>
                             <div class="form-group row labs">
                                 <label for="Input email" class=" col-form-label col-form-label-lg">Email</label>
                                     <div class="inputDiv">
-                                        <input type="email" class="logInput" :class="{ danger_inp: danger_e }" placeholder="Input email" v-model="email">
+                                        <input type="email" class="logInput" :class="{ danger_inp: danger_e }" placeholder="Input email" v-model="email" @keyup.enter="pres">
                                         <p class="danger-text" v-show="danger_e">{{danger_email}}</p>
                                     </div>
                             </div>
                             <div class="form-group row labs">
                                 <label for="Input Password" class=" col-form-label col-form-label-lg">Password</label>
                                     <div class="inputDiv">
-                                        <input type="password" class="logInput" :class="{ danger_inp: danger_p }"  placeholder="Input Password" v-model="password">
+                                        <input type="password" class="logInput" :class="{ danger_inp: danger_p }"  placeholder="Input Password" v-model="password" @keyup.enter="pres">
                                         <p class="danger-text" v-show="danger_p">{{danger_pass}}</p>
                                     </div>
                             </div>
                             <div class="form-group row labs">
                                 <label for="Confirm Password" class=" col-form-label col-form-label-lg">ConfirmPass</label>
                                     <div class="inputDiv">
-                                        <input type="password" class="logInput" :class="{ danger_inp: danger_cp }" placeholder="Confirm Password" v-model="password_confirmation">
+                                        <input type="password" class="logInput" :class="{ danger_inp: danger_cp }" placeholder="Confirm Password" v-model="password_confirmation" @keyup.enter="pres">
                                         <p class="danger-text" v-show="danger_cp">{{danger_confp}}</p>
                                     </div>
                             </div>
@@ -125,6 +125,9 @@ export default {
         },
         closeModal(){
             this.$router.push("/");
+        },
+        pres(){
+            this.signup()
         }
     }
 }
@@ -137,8 +140,7 @@ export default {
 .bg_img{
     background-image: url(/src/assets/img/bg_login.jpg);
     background-size: 100%;
-    background-position: bottom;
-    
+    background-position: top center;
 }
 .labs{
     display: flex;
