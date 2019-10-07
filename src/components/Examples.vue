@@ -1,6 +1,8 @@
 <template>
     <div class="menu-examples">
+
         <div class="menu">
+
             <router-link to="/group1">
                 <a class="nav-link1 nav-link2" href="#">Group one <span class="sr-only">(current)</span></a>
             </router-link>
@@ -15,28 +17,25 @@
             </router-link>
         </div>
       <!-- <router-view name="a"></router-view> -->
-
     </div>
 </template>
-
 <script>
 export default {
     
 }
 </script>
-
 <style scoped>
     .router-link-active a{
         background-color: #f2f2f2;
     }
     .menu-examples{
-        /* position: fixed; */
-        /* top: 0; */
+        position: sticky;
+        top: 77px;
+        height: 90vh;
         border: 1px solid #d4d4d4;
-        /* margin-top: 77px; */
-        /* border-radius: 5px; */
         overflow: hidden;
         height: 100%;
+
     }
     .menu{
         display: flex;
