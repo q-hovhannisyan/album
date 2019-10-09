@@ -16,18 +16,18 @@
 <!--           images and id           -->
                 <draggable @start="drag=true" @end="drag=false" >
                     <transition-group>
-                <div class="col-lg-4 col-sm-6  oneItem position-relative" v-for="(item1, index) in arr" :key="item1"  >
+                <div class="col-lg-4 col-sm-6  oneItem position-relative" v-for="(item1, index) in arr" :key="index" draggable="true" >
                     <div class="card item-content ">
                         <div class="images_wrapper">
                             <img  :src="`http://127.0.0.1:8000/getImages?token=${token}&imageId=${item1}`" class="card-img-top" :alt="item1.title" @click="toggle">
                         </div>
-                        <div class="delete" @click="del(item1)">
+                        <div class="delete" @click="del(index)">
                             <img src="/src/assets/icons/cancel.png" width="120" alt="">
                         </div>
                         <div class="card-body d-flex justify-content-between">
                             <input class=" position-static ml-1 check" type="checkbox"  :value="item1" v-model="images"  aria-label="...">
                             <div  class="descript_view">
-                                <p class="position-absolute te">Description</p>
+                                <p class="position-absolute te">Description {{index}}</p>
                                 <button @click="edit($event)" class="edit_btn" :value="item1">Edit</button>
                             </div>
                                 <div class="d-flex justify-content-center  editable" >
@@ -86,7 +86,6 @@ export default {
             fullscreen: false,
             files: '',
             counter: 0,
-            editable: false,
             user: localStorage.getItem('name'),
             token: localStorage.getItem('token'),
             email: localStorage.getItem('email'),
@@ -100,6 +99,9 @@ export default {
               console.log(this.images, "imagess")
           }
       },
+        arr: function (newVal, oldVal) {
+          console.log(newVal, oldVal)
+        }
     },
     methods: {
         edit(a){
@@ -174,19 +176,19 @@ export default {
         },
         del(e){
           console.log(e)
-            axios.post(`${host}user/image/delete?token=+${this.token}+&id=+ ${e} `, this.token, e,
-                {
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    }
-                }
-            )
-                .then((response)=>{
-                    this.arr= response.data.imgId;
-                })
-                .catch((error)=>{
-                    console.log(error);
-                })
+            // axios.post(`${host}user/image/delete?token=+${this.token}+&id=+ ${e} `, this.token, e,
+            //     {
+            //         headers: {
+            //             'Content-Type': 'text/plain'
+            //         }
+            //     }
+            // )
+                // .then((response)=>{
+                //     this.arr= response.data.imgId;
+                // })
+                // .catch((error)=>{
+                //     console.log(error);
+                // })
         },
         handleFileUploads(){
             this.files = this.$refs.files.files;
