@@ -5,9 +5,7 @@
             <div class="upload-btn-wrapper">
                 <div @click="onUpload()" class="upButton"></div>
                 <label for="files" class="chooseLable"> Choose Files </label>
-
                 <input type="file" id="files" ref="files" multiple @change="handleFileUploads()" style="display: none">
-
             </div>
             <div :class="[ counter == 10 ? 'green' : 'counter']">
                 {{counter}}
@@ -18,35 +16,33 @@
 <!--           images and id           -->
                 <draggable @start="drag=true" @end="drag=false" >
                     <transition-group>
-                <div class="col-lg-4 col-sm-6  oneItem position-relative" v-for="(item1, index) in arr" :key="index"  >
+                <div class="col-lg-4 col-sm-6  oneItem position-relative" v-for="(item1, index) in arr" :key="index" draggable="true" >
                     <div class="card item-content ">
                         <div class="images_wrapper">
                             <img  :src="`http://127.0.0.1:8000/getImages?token=${token}&imageId=${item1}`" class="card-img-top" :alt="item1.title" @click="toggle">
                         </div>
-                        <div class="delete" @click="del(item1)">
+                        <div class="delete" @click="del(index)">
                             <img src="/src/assets/icons/cancel.png" width="120" alt="">
                         </div>
                         <div class="card-body d-flex justify-content-between">
                             <input class=" position-static ml-1 check" type="checkbox"  :value="item1" v-model="images"  aria-label="...">
-                            <b-textarea rows="2" placeholder="Text here..."  v-model="arr[index].value" class=" textar" :value="item1"></b-textarea>
-                            <!-- <input type="text" v-model="newText" class="hide" @keyup.enter="keyPressed(index, item, $event)" autocomplete="off"> -->
-                            <!-- <h6 class="card-title show" @click="myFunction">{{item.title}}</h6> -->
-                            <div class="downbtn">
-                                <button class="btn btn-success btnPic" @click="addText(arr[index])">Save</button>
-                                <button class="btn btn-danger btnPic" @click="arr[index].value='' , arr[index].title=''">Cancel</button>
+                            <div  class="descript_view">
+                                <p class="position-absolute te">Description {{index}}</p>
+                                <button @click="edit($event)" class="edit_btn" :value="item1">Edit</button>
+                            </div>
+                                <div class="d-flex justify-content-center  editable" >
+                                <div class="description_modal">
+                                    <b-textarea rows="2" placeholder="Text here..."  v-model="arr[index].description" class=" textar" :value="item1"></b-textarea>
+    <!--                             <input type="text" v-model="newText" class="hide" @keyup.enter="keyPressed(index, item, $event)" autocomplete="off">-->
+    <!--                             <h6 @click="myFunction">Title{{item1.title}}</h6>-->
+                                    <div class="downbtn">
+                                        <button class="btn btn-success btnPic" @click="addText(arr[index])">Save</button>
+                                        <button class="btn btn-danger btnPic" @click="cancle($event)">Cancel</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-<!--                    <div class="card-body d-flex justify-content-between">-->
-<!--                        <input class=" position-static ml-1 check" type="checkbox"  :value="item1" v-model="images"  aria-label="...">-->
-<!--                        <b-textarea rows="2" placeholder="Text here..."  v-model="arr[index].value" class=" textar" :value="item1"></b-textarea>-->
-<!--                        &lt;!&ndash; <input type="text" v-model="newText" class="hide" @keyup.enter="keyPressed(index, item, $event)" autocomplete="off"> &ndash;&gt;-->
-<!--                        &lt;!&ndash; <h6 class="card-title show" @click="myFunction">{{item.title}}</h6> &ndash;&gt;-->
-<!--                        <div class="downbtn">-->
-<!--                            <button class="btn btn-success btnPic" @click="addText(arr[index])">Save</button>-->
-<!--                            <button class="btn btn-danger btnPic" @click="arr[index].value='' , arr[index].title=''">Cancel</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
                 </div>
                     </transition-group>
                 </draggable>
@@ -54,19 +50,16 @@
             <!-- // -->
             <b-button block variant="dark" class="generate" @click="gen"><h1>GENERATE</h1></b-button>
         </div>
-        <div class="pictures" v-if="open">
-<!--           <div class="row">-->
-<!--               <div v-for="(item, index) in images" :key="index"  class="col-lg-3">-->
-<!--                    <div class="card">-->
-<!--                            &lt;!&ndash; image click &ndash;&gt;-->
-<!--                        <img v-img:group-1 :src="`http://127.0.0.1:8000/getImages?token=${token}&imageId=${item}`" alt="">-->
-<!--                        <div class="card-body d-flex justify-content-between generated">-->
-<!--                            <h6>{{item.title}}</h6>-->
-<!--                        </div>-->
+<!--        <div class="pictures" v-if="open">-->
+<!--           <div class="row ">-->
+<!--               <div v-for="(item, index) in images" :key="index"  class="col-lg-3 downItem ">-->
+<!--                    <img :src="`http://127.0.0.1:8000/getImages?token=${token}&imageId=${item}`" alt="">-->
+<!--                    <div class="card-body d-flex justify-content-between generated">-->
+<!--                        <h6>title{{item.title}}</h6>-->
 <!--                    </div>-->
 <!--                </div>-->
 <!--           </div>-->
-       </div>
+<!--       </div>-->
     </div>
 </template>
 <script>
@@ -83,7 +76,6 @@ export default {
                 //     title: "Animals ",
                 //     href: "src/assets/img/lion.jpg"
                 // },
-
             ],
             event: '',
             newText: "",
@@ -104,10 +96,22 @@ export default {
           this.counter = val.length;
           if(this.counter == 10 ){
               document.getElementById('counter').style.backgroundColor = green;
+              console.log(this.images, "imagess")
           }
       },
+        arr: function (newVal, oldVal) {
+          console.log(newVal, oldVal)
+        }
     },
     methods: {
+        edit(a){
+            let el=a.target.parentNode.parentNode.lastElementChild.classList;
+            el.add('open_editable')
+        },
+        cancle(a){
+            let elem=a.target.parentElement.parentElement.parentNode.classList;
+            elem.remove('open_editable')
+        },
         addText(e){
             e.title=e.value;
         },
@@ -139,6 +143,7 @@ export default {
         gen(){
             this.open=true;
             alerte.$emit("clickOn", this.images);
+            console.log(this.images)
         },
         reg(){
             this.$router.push('/registration');
@@ -171,19 +176,19 @@ export default {
         },
         del(e){
           console.log(e)
-            axios.post(`${host}user/image/delete?token=+${this.token}+&id=+ ${e} `, this.token, e,
-                {
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    }
-                }
-            )
-                .then((response)=>{
-                    this.arr= response.data.imgId;
-                })
-                .catch((error)=>{
-                    console.log(error);
-                })
+            // axios.post(`${host}user/image/delete?token=+${this.token}+&id=+ ${e} `, this.token, e,
+            //     {
+            //         headers: {
+            //             'Content-Type': 'text/plain'
+            //         }
+            //     }
+            // )
+                // .then((response)=>{
+                //     this.arr= response.data.imgId;
+                // })
+                // .catch((error)=>{
+                //     console.log(error);
+                // })
         },
         handleFileUploads(){
             this.files = this.$refs.files.files;
@@ -202,7 +207,6 @@ export default {
         }
     },
     created () {
-
         axios.get(`${host}getImgId?token=`+this.token, this.token,
             {
                 headers: {
@@ -220,6 +224,36 @@ export default {
 }
 </script>
 <style scoped>
+    .edit_btn{
+        position: inherit;
+        bottom: 5px;
+        right: 5px;
+        background: linear-gradient(48.67deg, #52C1FF 0%, #3eff9e 100%);
+    }
+    .descript_view{
+        position: absolute;
+        width: 85%;
+        height: 16%;
+        right: 0;
+        bottom: 0;
+    }
+    .editable{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+        transform: translateY(100%);
+        visibility: hidden;
+        opacity: 0;
+        transition: 0.5s;
+    }
+    .open_editable{
+        transform: translateY(0);
+        visibility: visible;
+        opacity: 1;
+    }
     .delete{
         position: absolute;
         right: 10px;
@@ -251,12 +285,13 @@ export default {
         width: auto;
     }
     .chooseLable{
-        background-color: #0ad3c8;
+        /*background-color: #0ad3c8;*/
         width: 110px;
         border-radius: 10px;
-        border: 5px groove lightseagreen;
+        /*border: 5px groove lightseagreen;*/
         margin-bottom: 0;
         cursor: pointer;
+        background: linear-gradient(48.67deg, #3eff9e 0%, #52C1FF 100%);
     }
     .upButton{
         width: 50px;
@@ -374,10 +409,16 @@ export default {
 .textar{
     overflow-y: scroll;
     width: 80%;
-    margin-left: 13px;
-    margin-right: 4.5rem;
+    /*margin-left: 13px;*/
+    /*margin-right: 4.5rem;*/
     resize: none;
     overflow: auto;
+}
+.description_modal{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 .pictures{
     width: 75%;
@@ -450,10 +491,10 @@ input[type=checkbox]:checked:after {
     display: unset;
 }
 .downbtn{
-    width: 80px;
-    height: 60px;
-    position: absolute;
-    right: 0px;
+    width: 80%;
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 0 0 0;
 }
 .btnPic{
     width: 60px;
