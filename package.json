@@ -19,7 +19,7 @@
     "bootstrap-vue": "^2.0.0-rc.25",
     "compass": "^0.1.1",
     "flipbook-vue": "^0.5.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "mdbootstrap": "^4.8.7",
     "muuri": "^0.8.0",
     "v-img": "^0.2.0",
